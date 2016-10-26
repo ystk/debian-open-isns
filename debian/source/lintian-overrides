@@ -1,0 +1,4 @@
+# Handled by dh-autoreconf
+open-isns source: outdated-autotools-helper-file aclocal/config.sub 2005-05-12
+# Handled by dh-autoreconf
+open-isns source: outdated-autotools-helper-file aclocal/config.guess 2005-05-27

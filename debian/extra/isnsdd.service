@@ -1,0 +1,14 @@
+[Unit]
+Description=iSNS discovery daemon
+Documentation=man:isnsdd(8)
+Documentation=man:isnsdd.conf(5)
+After=remote-fs.target network-online.target network.target isnsd.service
+Wants=network-online.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/isnsdd
+PIDFile=/run/isnsdd.pid
+
+[Install]
+WantedBy=multi-user.target

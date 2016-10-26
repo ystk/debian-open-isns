@@ -1,0 +1,386 @@
+Description: Add support for GNU Hurd
+ GNU Hurd supports credentials passing in the same manner as FreeBSD
+ does. There are three changes required to fully support it though:
+ .
+  - Hurd does not have PATH_MAX, as there is not limit to the maximum
+    path size. Unconditionally replace usage of PATH_MAX with dynamic
+    allocations, as that will work on any platform.
+ .
+  - Hurd does not support peer names for AF_LOCAL sockets. As only
+    stream sockets are used anyway in the AF_LOCAL case, they can be
+    identified uniquely via the associated file descriptor. So instead
+    of trying to get a peer name, synthesize one by using the file
+    descriptor. (Do this unconditionally on all platforms, as that
+    does not hurt there either.)
+ .
+  - Hurd does not support SO_REUSEADDR on AF_LOCAL sockets. Since it
+    is useless there anyway (the socket is unlinked before bind is
+    called), only set if for AF_INET{,6} sockets on all platforms.
+ .
+ Signed-off-by: Christian Seiler <christian@iwakd.de>
+Author: Christian Seiler <christian@iwakd.de>
+Forwarded: https://github.com/open-iscsi/open-isns/pull/8
+Last-Update: 2016-08-21
+---
+This patch header follows DEP-3: http://dep.debian.net/deps/dep3/
+ db-file.c | 70 ++++++++++++++++++++++++++++++++++++++-------------------------
+ isnsadm.c | 10 +++++----
+ local.c   | 14 ++++++++++---
+ pki.c     | 18 ++++++++++++----
+ socket.c  | 40 +++++++++++++++++++++++++++++-------
+ 5 files changed, 106 insertions(+), 46 deletions(-)
+
+--- a/db-file.c
++++ b/db-file.c
+@@ -50,23 +50,31 @@ static int	__dbe_file_load_all(const cha
+ /*
+  * Helper functions
+  */
+-static const char *
+-__path_concat(const char *dirname, const char *basename)
++static char *
++__path_concat(const char *dirname, const char *prefix, const char *basename)
+ {
+-	static char	pathname[PATH_MAX];
++	size_t	capacity = strlen(dirname) + strlen(prefix) + strlen(basename) + 2;
++	char	*pathname;
+ 
+-	snprintf(pathname, sizeof(pathname), "%s/%s",
+-			dirname, basename);
++	pathname = isns_malloc(capacity);
++	if (!pathname)
++		isns_fatal("Out of memory.");
++	snprintf(pathname, capacity, "%s/%s%s",
++			dirname, prefix, basename);
+ 	return pathname;
+ }
+ 
+-static const char *
++static char *
+ __print_index(uint32_t index)
+ {
+-	static char	namebuf[32];
++	char	namebuf[32];
++	char	*result;
+ 
+ 	snprintf(namebuf, sizeof(namebuf), "%08x", index);
+-	return namebuf;
++	result = isns_strdup(namebuf);
++	if (!result)
++		isns_fatal("Out of memory.");
++	return result;
+ }
+ 
+ static int
+@@ -83,25 +91,25 @@ __get_index(const char *name, uint32_t *
+ /*
+  * Build path names for an object
+  */
+-static const char *
++static char *
+ __dbe_file_object_path(const char *dirname, const isns_object_t *obj)
+ {
+-	return __path_concat(dirname, __print_index(obj->ie_index));
++	char *index_str = __print_index(obj->ie_index);
++	char *result = __path_concat(dirname, "", index_str);
++	isns_free(index_str);
++	return result;
+ }
+ 
+ /*
+  * Build a path name for a temporary file.
+- * Cannot use __path_concat, because we need both names
+- * when storing objects
+  */
+-static const char *
++static char *
+ __dbe_file_object_temp(const char *dirname, const isns_object_t *obj)
+ {
+-	static char	pathname[PATH_MAX];
+-
+-	snprintf(pathname, sizeof(pathname), "%s/.%s",
+-			dirname, __print_index(obj->ie_index));
+-	return pathname;
++	char *index_str = __print_index(obj->ie_index);
++	char *result = __path_concat(dirname, ".", index_str);
++	isns_free(index_str);
++	return result;
+ }
+ 
+ /*
+@@ -150,8 +158,8 @@ static int
+ __dbe_file_store_object(const char *dirname, const isns_object_t *obj)
+ {
+ 	struct isns_db_object_info info;
+-	const char	*path = __dbe_file_object_path(dirname, obj);
+-	const char	*temp = __dbe_file_object_temp(dirname, obj);
++	char		*path = __dbe_file_object_path(dirname, obj);
++	char		*temp = __dbe_file_object_temp(dirname, obj);
+ 	buf_t		*bp = NULL;
+ 	int		status = ISNS_INTERNAL_ERROR;
+ 
+@@ -196,6 +204,8 @@ __dbe_file_store_object(const char *dirn
+ 	}
+ 
+ out:
++	isns_free(path);
++	isns_free(temp);
+ 	if (bp)
+ 		buf_close(bp);
+ 	return status;
+@@ -231,11 +241,12 @@ __dbe_file_store_children(const char *di
+ static int
+ __dbe_file_remove_object(const char *dirname, const isns_object_t *obj)
+ {
+-	const char	*path = __dbe_file_object_path(dirname, obj);
++	char		*path = __dbe_file_object_path(dirname, obj);
+ 
+ 	isns_debug_state("DB: Purging object %u (%s)\n", obj->ie_index, path);
+ 	if (unlink(path) < 0)
+ 		isns_error("DB: Cannot remove %s: %m\n", path);
++	isns_free(path);
+ 	return ISNS_SUCCESS;
+ }
+ 
+@@ -354,13 +365,13 @@ __dbe_file_load_all(const char *dirpath,
+ 
+ 	while ((dp = readdir(dir)) != NULL) {
+ 		struct stat	stb;
+-		const char	*path;
++		char		*path;
+ 
+ 		if (dp->d_name[0] == '.'
+ 		 || !strcmp(dp->d_name, "DB"))
+ 			continue;
+ 
+-		path = __path_concat(dirpath, dp->d_name);
++		path = __path_concat(dirpath, "", dp->d_name);
+ 		if (lstat(path, &stb) < 0) {
+ 			isns_error("DB: cannot stat %s: %m\n", path);
+ 			status = ISNS_INTERNAL_ERROR;
+@@ -371,6 +382,7 @@ __dbe_file_load_all(const char *dirpath,
+ 		} else {
+ 			isns_debug_state("DB: ignoring %s\n", path);
+ 		}
++		isns_free(path);
+ 
+ 		if (status != ISNS_SUCCESS)
+ 			break;
+@@ -387,11 +399,11 @@ static int
+ __dbe_file_write_info(isns_db_t *db)
+ {
+ 	isns_db_backend_t *back = db->id_backend;
+-	const char	*path;
++	char		*path = NULL;
+ 	buf_t		*bp;
+ 	int		status = ISNS_INTERNAL_ERROR;
+ 
+-	path = __path_concat(back->idb_name, "DB");
++	path = __path_concat(back->idb_name, "", "DB");
+ 	if ((bp = buf_open(path, O_CREAT|O_TRUNC|O_WRONLY)) == NULL) {
+ 		isns_error("Unable to write %s: %m\n", path);
+ 		goto out;
+@@ -403,6 +415,7 @@ __dbe_file_write_info(isns_db_t *db)
+ 		status = ISNS_SUCCESS;
+ 
+ out:
++	isns_free(path);
+ 	if (bp)
+ 		buf_close(bp);
+ 	return status;
+@@ -413,11 +426,11 @@ __dbe_file_load_info(isns_db_t *db)
+ {
+ 	isns_db_backend_t *back = db->id_backend;
+ 	struct isns_db_file_info info;
+-	const char	*path;
++	char		*path = NULL;
+ 	buf_t		*bp = NULL;
+ 	int		status = ISNS_NO_SUCH_ENTRY;
+ 
+-	path = __path_concat(back->idb_name, "DB");
++	path = __path_concat(back->idb_name, "", "DB");
+ 	if ((bp = buf_open(path, O_RDONLY)) == NULL)
+ 		goto out;
+ 
+@@ -445,6 +458,7 @@ __dbe_file_load_info(isns_db_t *db)
+ 	}
+ 
+ out:
++	isns_free(path);
+ 	if (bp)
+ 		buf_close(bp);
+ 	return status;
+--- a/isnsadm.c
++++ b/isnsadm.c
+@@ -70,7 +70,7 @@ static int		opt_action = 0;
+ static int		opt_local = 0;
+ static int		opt_control = 0;
+ static int		opt_replace = 0;
+-static const char *	opt_keyfile = NULL;
++static char *		opt_keyfile = NULL;
+ static char *		opt_key = NULL;
+ static const char *	opt_servername = NULL;
+ static struct sockaddr_storage opt_myaddr;
+@@ -1051,9 +1051,11 @@ enroll_client(isns_client_t *clnt, int a
+ #endif
+ 
+ 	if (!opt_keyfile) {
+-		static char 	namebuf[PATH_MAX];
+-
+-		snprintf(namebuf, sizeof(namebuf), "%s.key", client_name);
++		size_t capacity = strlen(client_name) + 5;
++		char *namebuf = isns_malloc(capacity);
++		if (!namebuf)
++			isns_fatal("Out of memory.");
++		snprintf(namebuf, capacity, "%s.key", client_name);
+ 		opt_keyfile = namebuf;
+ 	}
+ 
+--- a/local.c
++++ b/local.c
+@@ -131,11 +131,16 @@ out:
+ static FILE *
+ __isns_local_registry_open_write(char **lock_name)
+ {
+-	char	lock_path[PATH_MAX];
++	char	*lock_path;
++	size_t  capacity;
+ 	FILE	*fp;
+ 	int	fd, retry;
+ 
+-	snprintf(lock_path, sizeof(lock_path), "%s.lock",
++	capacity = strlen(isns_config.ic_local_registry_file) + 6;
++	lock_path = isns_malloc(capacity);
++	if (!lock_path)
++		isns_fatal("Out of memory");
++	snprintf(lock_path, capacity, "%s.lock",
+ 			isns_config.ic_local_registry_file);
+ 
+ 	for (retry = 0; retry < 5; ++retry) {
+@@ -145,6 +150,7 @@ __isns_local_registry_open_write(char **
+ 		if (errno != EEXIST) {
+ 			isns_error("Unable to create %s: %m\n",
+ 					lock_path);
++			isns_free(lock_path);
+ 			return NULL;
+ 		}
+ 		isns_error("Cannot lock %s - retry in 1 sec\n",
+@@ -155,9 +161,11 @@ __isns_local_registry_open_write(char **
+ 	if (!(fp = fdopen(fd, "w"))) {
+ 		isns_error("fdopen failed: %m\n");
+ 		close(fd);
++		isns_free(lock_path);
+ 		return NULL;
+ 	}
+-	isns_assign_string(lock_name, lock_path);
++	isns_free(*lock_name);
++	*lock_name = lock_path;
+ 	return fp;
+ }
+ 
+--- a/pki.c
++++ b/pki.c
+@@ -542,19 +542,29 @@ __isns_simple_keystore_find(isns_keystor
+ 		const char *name, size_t namelen)
+ {
+ 	isns_simple_keystore_t *store = (isns_simple_keystore_t *) store_base;
+-	char		pathname[PATH_MAX];
++	char		*pathname;
++	size_t		capacity;
++	EVP_PKEY	*result;
+ 
+ 	/* Refuse to open key files with names
+ 	 * that refer to parent directories */
+ 	if (memchr(name, '/', namelen) || name[0] == '.')
+ 		return NULL;
+ 
+-	snprintf(pathname, sizeof(pathname),
++	capacity = strlen(store->sc_dirpath) + 2 + namelen;
++	pathname = isns_malloc(capacity);
++	if (!pathname)
++		isns_fatal("Out of memory.");
++	snprintf(pathname, capacity,
+ 			"%s/%.*s", store->sc_dirpath,
+ 			(int) namelen, name);
+-	if (access(pathname, R_OK) < 0)
++	if (access(pathname, R_OK) < 0) {
++		isns_free(pathname);
+ 		return NULL;
+-	return isns_dsasig_load_public_pem(NULL, pathname);
++	}
++	result = isns_dsasig_load_public_pem(NULL, pathname);
++	isns_free(pathname);
++	return result;
+ }
+ 
+ isns_keystore_t *
+--- a/socket.c
++++ b/socket.c
+@@ -626,6 +626,9 @@ isns_net_stream_accept(isns_socket_t *so
+ 	child->is_error = isns_net_stream_error;
+ 	child->is_poll_mask = POLLIN|POLLHUP;
+ 	child->is_security = sock->is_security;
++	/* We need to check the domain of the socket later. */
++	memcpy(&child->is_src.addr, &sock->is_src.addr, sock->is_src.addrlen);
++	child->is_src.addrlen = sock->is_src.addrlen;
+ 
+ 	if (isns_config.ic_network.idle_timeout)
+ 		isns_net_set_timeout(child,
+@@ -713,8 +716,13 @@ isns_net_recvmsg(isns_socket_t *sock,
+ 	iov.iov_len = count;
+ 
+ 	memset(&msg, 0, sizeof(msg));
+-	msg.msg_name = addr;
+-	msg.msg_namelen = *alen;
++	/* Some kernels don't provide peer names for AF_LOCAL sockets,
++	 * we'll synthesize a peer name based on the file descriptor
++	 * later. */
++	if (sock->is_dst.addr.ss_family != AF_LOCAL && sock->is_src.addr.ss_family != AF_LOCAL) {
++		msg.msg_name = addr;
++		msg.msg_namelen = *alen;
++	}
+ 	msg.msg_iov = &iov;
+ 	msg.msg_iovlen = 1;
+ 	msg.msg_control = control;
+@@ -737,7 +745,20 @@ isns_net_recvmsg(isns_socket_t *sock,
+ 		cmsg = CMSG_NXTHDR(&msg, cmsg);
+ 	}
+ 
+-	*alen = msg.msg_namelen;
++	if (sock->is_dst.addr.ss_family != AF_LOCAL && sock->is_src.addr.ss_family != AF_LOCAL) {
++		*alen = msg.msg_namelen;
++	} else {
++		/* AF_LOCAL sockets don't have valid peer names on some
++		 * kernels (e.g. Hurd), so synthesize one based on the
++		 * file descriptor number. (It's only used for matching
++		 * multiple PDUs based on their origin.) This is unique
++		 * because this function is only ever called for stream
++		 * sockets. */
++		struct sockaddr_un *sun = (struct sockaddr_un *)addr;
++		sun->sun_family = AF_LOCAL;
++		memcpy(&sun->sun_path, &sock->is_desc, sizeof(int));
++		*alen = offsetof(struct sockaddr_un, sun_path) + sizeof(int);
++	}
+ 	return len;
+ }
+ 
+@@ -1515,10 +1536,15 @@ isns_socket_open(isns_socket_t *sock)
+ 		src_addr = (struct sockaddr *) &sock->is_src.addr;
+ 		src_len = sock->is_src.addrlen;
+ 
+-		/* For debugging only! */
+-		if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0) {
+-			isns_error("setsockopt(SO_REUSEADDR) failed: %m\n");
+-			goto failed;
++		/* GNU Hurd only supports SO_REUSEADDR for AF_INET, and
++		 * it's useless for AF_LOCAL on any platform. (unlink
++		 * is called before bind.) */
++		if (af == AF_INET || af == AF_INET6) {
++			/* For debugging only! */
++			if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0) {
++				isns_error("setsockopt(SO_REUSEADDR) failed: %m\n");
++				goto failed;
++			}
+ 		}
+ 
+ 		switch (af) {

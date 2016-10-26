@@ -1,0 +1,5 @@
+#!/usr/bin/dh-exec
+# Install -nocrypto version into /lib, because open-iscsi depends on
+# this library and that is installed in /.
+usr/lib/*/libisns-nocrypto.so.* /lib/${DEB_HOST_MULTIARCH}/
+usr/lib/*/libisns.so.*

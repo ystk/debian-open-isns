@@ -1,0 +1,58 @@
+open-isns (0.96-5~bpo8+1) jessie-backports; urgency=medium
+
+  * Rebuild for jessie-backports.
+  * debian/control: lower debhelper Build-Depends to version in backports
+
+ -- Christian Seiler <christian@iwakd.de>  Mon, 03 Oct 2016 10:15:01 +0200
+
+open-isns (0.96-5) unstable; urgency=medium
+
+  [ Christian Seiler ]
+  * debian/patches: replace patches with those accepted upstream
+  * debian/tests/auth: avoid race condition after isnsd restart
+  * debian/control: bump debhelper dependency now that version 10 is
+    released
+  * debian/control: use cgit instead of gitweb for Vcs-Browser
+
+  [ Debconf translations updates ]
+  * Dutch (Frans Spiesschaert). (Closes: #834627)
+  * French (Jean-Pierre Giraud). (Closes: #835097)
+
+ -- Christian Seiler <christian@iwakd.de>  Sun, 18 Sep 2016 14:11:11 +0200
+
+open-isns (0.96-4) unstable; urgency=medium
+
+  * debian/tests: refactor code, show isnsd status if auth test fails
+  * Rename libisns0-udeb to libisns-nocrypto0-udeb.
+    The udeb only contains the library required for future open-iscsi
+    versions (there is no need to run an iSNS server in a d-i
+    environment), which is the variant that's not linked against OpenSSL
+    to be compatible with the GPL. In contrast to libisns0, which
+    contains both versions of the library (including the OpenSSL-linked
+    libisns.so.0), the package name of the udeb should reflect the name
+    of the library included.
+
+ -- Christian Seiler <christian@iwakd.de>  Fri, 05 Aug 2016 19:46:56 +0200
+
+open-isns (0.96-3) unstable; urgency=medium
+
+  * Build a -nocrypto variant that doesn't link against OpenSSL.
+    (Required for GPL programs linking against libisns.)
+
+ -- Christian Seiler <christian@iwakd.de>  Tue, 26 Jul 2016 11:36:52 +0200
+
+open-isns (0.96-2) unstable; urgency=medium
+
+  * debian/*.postrm: ask user whether to delete auth_key etc. on purge
+    (Closes: #832344)
+  * debian/patches: fix FTBFS on kfreebsd-*
+  * debian/patches: fix FTBFS on hurd-i386
+  * debian/open-isns-server.postinst: prevent hang on sysvinit systems
+
+ -- Christian Seiler <christian@iwakd.de>  Sun, 24 Jul 2016 21:57:27 +0200
+
+open-isns (0.96-1) unstable; urgency=low
+
+  * Initial release. (Closes: #799061)
+
+ -- Christian Seiler <christian@iwakd.de>  Sun, 10 Jul 2016 09:46:56 +0200

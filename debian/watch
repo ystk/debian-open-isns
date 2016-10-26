@@ -1,0 +1,3 @@
+version=3
+opts=filenamemangle=s/.+\/v?(\d\S*)\.tar\.gz/open-isns-$1\.tar\.gz/ \
+  https://github.com/open-iscsi/open-isns/releases .*/v?(\d\S*)\.tar\.gz

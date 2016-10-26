@@ -1,0 +1,100 @@
+Source: open-isns
+Section: net
+Priority: optional
+Maintainer: Debian iSCSI Maintainers <pkg-iscsi-maintainers@lists.alioth.debian.org>
+Uploaders: Ritesh Raj Sarraf <rrs@debian.org>,
+           Christian Seiler <christian@iwakd.de>
+Build-Depends: debhelper (>= 9.20160403~),
+               dh-exec,
+               dh-systemd,
+               libssl-dev,
+               po-debconf
+Standards-Version: 3.9.8
+Vcs-Git: https://anonscm.debian.org/git/pkg-iscsi/open-isns.git -b debian/master
+Vcs-Browser: https://anonscm.debian.org/cgit/pkg-iscsi/open-isns.git
+Homepage: https://github.com/open-iscsi/open-isns
+Testsuite: autopkgtest
+
+Package: open-isns-utils
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Recommends: open-isns-discoveryd
+Description: Internet Storage Name Service - client utilities
+ Open-iSNS is an implementation of the Internet Storage Name Service
+ (iSNS), according to RFC 4171, which facilitates automated discovery,
+ management, and configuration of iSCSI and Fibre Channel devices on a
+ TCP/IP network.
+ .
+ This package contains the isnsadm client utility for managing
+ Open-iSNS servers.
+
+Package: open-isns-server
+Architecture: any
+Depends: open-isns-utils, ${misc:Depends}, ${shlibs:Depends}
+Description: Internet Storage Name Service - iSNS server
+ Open-iSNS is an implementation of the Internet Storage Name Service
+ (iSNS), according to RFC 4171, which facilitates automated discovery,
+ management, and configuration of iSCSI and Fibre Channel devices on a
+ TCP/IP network.
+ .
+ This package contains the isnsd server, supporting persistent storage
+ registrations.
+
+Package: open-isns-discoveryd
+Architecture: any
+Depends: open-isns-utils, ${misc:Depends}, ${shlibs:Depends}
+Description: Internet Storage Name Service - iSNS discovery daemon
+ Open-iSNS is an implementation of the Internet Storage Name Service
+ (iSNS), according to RFC 4171, which facilitates automated discovery,
+ management, and configuration of iSCSI and Fibre Channel devices on a
+ TCP/IP network.
+ .
+ This package contains the isnsdd discovery daemon, handling all the
+ server communications required to register a node, its portals, and to
+ maintain the registration. In addition, it uses the iSNS State Change
+ Notification framework to learn of new targets or initiators coming
+ online and informs local services (such as the iSCSI initiator daemon)
+ about these changes.
+
+Package: libisns0
+Architecture: any
+Multi-Arch: same
+Section: libs
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Recommends: netbase
+Description: Internet Storage Name Service - shared libraries
+ Open-iSNS is an implementation of the Internet Storage Name Service
+ (iSNS), according to RFC 4171, which facilitates automated discovery,
+ management, and configuration of iSCSI and Fibre Channel devices on a
+ TCP/IP network.
+ .
+ This package provides the libisns shared library for use in client
+ applications.
+
+Package: libisns-dev
+Architecture: any
+Multi-Arch: same
+Section: libdevel
+Depends: libisns0 (= ${binary:Version}), ${misc:Depends}, ${shlibs:Depends}
+Description: Internet Storage Name Service - development files
+ Open-iSNS is an implementation of the Internet Storage Name Service
+ (iSNS), according to RFC 4171, which facilitates automated discovery,
+ management, and configuration of iSCSI and Fibre Channel devices on a
+ TCP/IP network.
+ .
+ This package provides the development libraries and header files for
+ the libisns library.
+
+Package: libisns-nocrypto0-udeb
+Package-Type: udeb
+Architecture: any
+Section: debian-installer
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: Internet Storage Name Service - shared libraries
+ Open-iSNS is an implementation of the Internet Storage Name Service
+ (iSNS), according to RFC 4171, which facilitates automated discovery,
+ management, and configuration of iSCSI and Fibre Channel devices on a
+ TCP/IP network.
+ .
+ This package provides the libisns shared library for use within the
+ Debian Installer. Do not install it on a normal system.

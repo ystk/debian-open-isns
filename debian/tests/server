@@ -1,0 +1,9 @@
+#!/bin/sh
+
+set -e
+
+. debian/tests/functions.inc
+
+[ -d /etc/isns ] || die "/etc/isns not a directory"
+
+service_status isnsd

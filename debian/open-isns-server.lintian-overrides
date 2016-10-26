@@ -1,0 +1,2 @@
+# We only need debconf in postrm in this package.
+open-isns-server: no-debconf-config

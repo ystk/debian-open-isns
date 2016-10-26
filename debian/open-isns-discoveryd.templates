@@ -1,0 +1,77 @@
+Template: open-isns-discoveryd/isns-server
+Type: string
+_Description: iSNS server name:
+ The iSNS discovery daemon will connect to an iSNS server at startup.
+ .
+ If left blank, the discovery daemon will not be started after
+ package installation, and you will have an opportunity to modify
+ the configuration file, /etc/isns/isnsdd.conf.
+
+Template: open-isns-discoveryd/server-pubkey
+Type: string
+_Description: iSNS server public key file:
+ When authentication is enabled, the iSNS discovery daemon needs to
+ know the public key of the iSNS server. Please provide a file name
+ that contains the public key. It will then be copied to
+ /etc/isns/server_key.pub.
+ .
+ Alternatively, you may copy the server's public key to that location
+ yourself.
+ .
+ If left blank and /etc/isns/server_key.pub does not exist,
+ authentication will remain disabled.
+
+Template: open-isns-discoveryd/own-key
+Type: string
+_Description: iSNS discovery daemon private key file:
+ When authentication is enabled, the iSNS discovery daemon needs to
+ have a private key, where the corresponding public key is enrolled
+ with the iSNS server. Please provide a file name that contains the
+ private key. It will then be copied to /etc/isns/auth_key.
+ .
+ Alternatively, you may copy the discovery daemon's private key to that
+ location yourself.
+ .
+ If left blank and /etc/isns/auth_key does not exist, authentication
+ will remain disabled.
+
+Template: open-isns-discoveryd/no-start
+Type: note
+_Description: iSNS discovery daemon will not be started at installation
+ You have not provided an iSNS server, and the configuration file
+ /etc/isns/isnsdd.conf does not contain a setting either. The discovery
+ daemon will therefore not be started at installation. Please configure
+ the discovery daemon manually.
+ .
+ It will nevertheless be configured to start at boot.
+
+Template: open-isns-discoveryd/purge-auth-key
+Type: boolean
+Default: true
+_Description: Remove /etc/isns/auth_key?
+ The private authentication key /etc/isns/auth_key was likely copied
+ there during the installation of the open-isns-discoveryd package. If
+ you are using other iSNS-related utilities (such as the iSNS server or
+ isnsadm) that require this authentication key, you should not remove
+ it.
+ .
+ Otherwise, it is safe to remove it.
+
+Template: open-isns-discoveryd/purge-server-key-pub
+Type: boolean
+Default: true
+_Description: Remove /etc/isns/server_key.pub?
+ The iSNS server's public key /etc/isns/server_key.pub was likely
+ copied there during the installation of the open-isns-discoveryd
+ package. If you are using other iSNS-related utilities (such as
+ isnsadm) that require this public key, you should not remove it.
+ .
+ Otherwise, it is safe to remove it.
+
+# Internal template, do not translate, will never be shown.
+Template: open-isns-discoveryd/isns-server-override
+Type: boolean
+Default: false
+Description: for internal use
+ Whether the postinst script should override the ServerAddress setting
+ in isnsdd.conf. Will be set by the config script.

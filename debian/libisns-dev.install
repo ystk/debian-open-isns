@@ -1,0 +1,3 @@
+usr/include/libisns/*.h
+usr/lib/*/libisns.a
+usr/lib/*/libisns-nocrypto.a

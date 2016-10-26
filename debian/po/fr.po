@@ -1,0 +1,215 @@
+# Translation of open-isns debconf templates to French.
+# Copyright (C) 2016, French l10n team <debian-l10n-french@lists.debian.org>
+# This file is distributed under the same license as the open-isns package.
+#
+# Jean-Pierre Giraud <jean-pierregiraud@neuf.fr>, 2016.
+msgid ""
+msgstr ""
+"Project-Id-Version: open-isns\n"
+"Report-Msgid-Bugs-To: open-isns@packages.debian.org\n"
+"POT-Creation-Date: 2016-07-24 17:33+0200\n"
+"PO-Revision-Date: 2016-08-09 15:45+0100\n"
+"Last-Translator: Jean-Pierre Giraud <jean-pierregiraud@neuf.fr>\n"
+"Language-Team: French <debian-l10n-french@lists.debian.org>\n"
+"Language: fr_FR\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Lokalize 2.0\n"
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:1001
+msgid "iSNS server name:"
+msgstr "Nom du serveur iSNS :"
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:1001
+msgid "The iSNS discovery daemon will connect to an iSNS server at startup."
+msgstr ""
+"Le démon de découverte iSNS se connectera à un serveur iSNS au démarrage."
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:1001
+msgid ""
+"If left blank, the discovery daemon will not be started after package "
+"installation, and you will have an opportunity to modify the configuration "
+"file, /etc/isns/isnsdd.conf."
+msgstr ""
+"Si ce champ reste vide, le démon de découverte ne sera pas "
+"démarré après l'installation du paquet et vous aurez une possibilité de "
+"modifier le fichier de configuration, /etc/isns/isnsdd.conf."
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:2001
+msgid "iSNS server public key file:"
+msgstr "Fichier de la clé publique du serveur iSNS :"
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:2001
+msgid ""
+"When authentication is enabled, the iSNS discovery daemon needs to know the "
+"public key of the iSNS server. Please provide a file name that contains the "
+"public key. It will then be copied to /etc/isns/server_key.pub."
+msgstr ""
+"Quand l'authentification est activée, le démon de découverte d'iSNS doit "
+"connaître la clé publique du serveur iSNS. Veuillez fournir le nom du "
+"fichier qui contient la clé publique. Elle sera alors copiée dans /etc/isns/"
+"server_key.pub."
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:2001
+msgid ""
+"Alternatively, you may copy the server's public key to that location "
+"yourself."
+msgstr ""
+"Autrement, vous pouvez vous-même copier la clé publique du serveur à cet "
+"emplacement."
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:2001
+msgid ""
+"If left blank and /etc/isns/server_key.pub does not exist, authentication "
+"will remain disabled."
+msgstr ""
+"Si ce champ reste vide, et si /etc/isns/server_key.pub n'existe pas, "
+"l'authentification ne sera pas activée."
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:3001
+msgid "iSNS discovery daemon private key file:"
+msgstr "Fichier de la clé privée du démon de découverte iSNS :"
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:3001
+msgid ""
+"When authentication is enabled, the iSNS discovery daemon needs to have a "
+"private key, where the corresponding public key is enrolled with the iSNS "
+"server. Please provide a file name that contains the private key. It will "
+"then be copied to /etc/isns/auth_key."
+msgstr ""
+"Quand l'authentification est activée, le démon de découverte iSNS doit avoir "
+"une clé privée dont la clé publique correspondante est inscrite dans le "
+"serveur iSNS. Veuillez fournir le nom du fichier qui contient la clé "
+"privée. Elle sera alors copiée dans /etc/isns/auth_key."
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:3001
+msgid ""
+"Alternatively, you may copy the discovery daemon's private key to that "
+"location yourself."
+msgstr ""
+"Autrement, vous pouvez vous-même copier la clé privée du démon de découverte "
+"à cet emplacement."
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:3001
+msgid ""
+"If left blank and /etc/isns/auth_key does not exist, authentication will "
+"remain disabled."
+msgstr ""
+"Si ce champ reste vide, et si /etc/isns/auth_key n'existe pas, "
+"l'authentification ne sera pas activée."
+
+#. Type: note
+#. Description
+#: ../open-isns-discoveryd.templates:4001
+msgid "iSNS discovery daemon will not be started at installation"
+msgstr "Le démon de découverte iSNS ne sera pas lancé à l'installation."
+
+#. Type: note
+#. Description
+#: ../open-isns-discoveryd.templates:4001
+msgid ""
+"You have not provided an iSNS server, and the configuration file /etc/isns/"
+"isnsdd.conf does not contain a setting either. The discovery daemon will "
+"therefore not be started at installation. Please configure the discovery "
+"daemon manually."
+msgstr ""
+"Vous n'avez pas indiqué de serveur iSNS et le fichier de configuration /etc/"
+"isns/isnsdd.conf ne renferme aucun paramètre. Le démon de découverte "
+"ne sera pas lancé à l'installation. Veuillez configurer le démon de "
+"découverte vous-même."
+
+#. Type: note
+#. Description
+#: ../open-isns-discoveryd.templates:4001
+msgid "It will nevertheless be configured to start at boot."
+msgstr "Il sera néanmoins configuré pour être lancé au démarrage."
+
+#. Type: boolean
+#. Description
+#: ../open-isns-discoveryd.templates:5001 ../open-isns-server.templates:1001
+msgid "Remove /etc/isns/auth_key?"
+msgstr "Supprimer /etc/isns/auth_key ?"
+
+#. Type: boolean
+#. Description
+#: ../open-isns-discoveryd.templates:5001
+msgid ""
+"The private authentication key /etc/isns/auth_key was likely copied there "
+"during the installation of the open-isns-discoveryd package. If you are "
+"using other iSNS-related utilities (such as the iSNS server or isnsadm) that "
+"require this authentication key, you should not remove it."
+msgstr ""
+"La clé privée d'authentification /etc/isns/auth_key a été vraisemblablement "
+"copiée ici lors de l'installation du paquet open-isns-discoveryd. Si vous "
+"utilisez d'autres utilitaires liés à iSNS (tels que le serveur iSNS ou "
+"isnsadm) qui ont besoin de cette clé d'authentification, vous ne devez pas "
+"la supprimer."
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../open-isns-discoveryd.templates:5001
+#: ../open-isns-discoveryd.templates:6001 ../open-isns-server.templates:1001
+msgid "Otherwise, it is safe to remove it."
+msgstr "Autrement, il est plus sûr de la supprimer."
+
+#. Type: boolean
+#. Description
+#: ../open-isns-discoveryd.templates:6001
+msgid "Remove /etc/isns/server_key.pub?"
+msgstr "Supprimer /etc/isns/server_key.pub ?"
+
+#. Type: boolean
+#. Description
+#: ../open-isns-discoveryd.templates:6001
+msgid ""
+"The iSNS server's public key /etc/isns/server_key.pub was likely copied "
+"there during the installation of the open-isns-discoveryd package. If you "
+"are using other iSNS-related utilities (such as isnsadm) that require this "
+"public key, you should not remove it."
+msgstr ""
+"La clé publique du serveur iSNS /etc/isns/server_key.pub a été "
+"vraisemblablement copiée ici durant l'installation du paquet "
+"open-isns-discoveryd. Si vous utilisez d'autres utilitaires liés à iSNS "
+"(tel que isnsadm) qui ont besoin de cette clé publique, vous "
+"ne devez pas la supprimer."
+
+#. Type: boolean
+#. Description
+#: ../open-isns-server.templates:1001
+msgid ""
+"The private authentication key /etc/isns/auth_key was likely generated "
+"during the  installation of the open-isns-server package. If you are using "
+"other iSNS-related utilities (such as the disocvery daemon or isnsadm) that "
+"require this authentication key, you should not remove it."
+msgstr ""
+"La clé privée d'authentification /etc/isns/auth_key a vraisemblablement été "
+"créée lors de l'installation du paquet open-isns-server. Si vous utilisez "
+"d'autres utilitaires liés à iSNS (tels que le démon de découverte ou "
+"isnsadm) qui ont besoin de cette clé d'authentification, vous ne devez pas "
+"la supprimer."

@@ -1,0 +1,223 @@
+# Dutch translation of open-isns debconf templates.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the open-isns package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Frans Spiesschaert <Frans.Spiesschaert@yucom.be>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: open-isns\n"
+"Report-Msgid-Bugs-To: open-isns@packages.debian.org\n"
+"POT-Creation-Date: 2016-07-24 17:33+0200\n"
+"PO-Revision-Date: 2016-08-02 22:52+0200\n"
+"Last-Translator: Frans Spiesschaert <Frans.Spiesschaert@yucom.be>\n"
+"Language-Team: Debian Dutch l10n Team <debian-l10n-dutch@lists.debian.org>\n"
+"Language: nl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 2.91.6\n"
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:1001
+msgid "iSNS server name:"
+msgstr "Naam van de iSNS-server:"
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:1001
+msgid "The iSNS discovery daemon will connect to an iSNS server at startup."
+msgstr ""
+"De achtergronddienst voor iSNS-detectie zal bij het opstarten verbinding "
+"maken met een iSNS-server."
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:1001
+msgid ""
+"If left blank, the discovery daemon will not be started after package "
+"installation, and you will have an opportunity to modify the configuration "
+"file, /etc/isns/isnsdd.conf."
+msgstr ""
+"Indien u dit leeg laat, zal de achtergronddienst niet opgestart worden na "
+"het installeren van het pakket en zult u de mogelijkheid hebben om het "
+"configuratiebestand /etc/isns/isnsdd.conf te bewerken."
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:2001
+msgid "iSNS server public key file:"
+msgstr "Bestand met de publieke sleutel van de iSNS-server:"
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:2001
+msgid ""
+"When authentication is enabled, the iSNS discovery daemon needs to know the "
+"public key of the iSNS server. Please provide a file name that contains the "
+"public key. It will then be copied to /etc/isns/server_key.pub."
+msgstr ""
+"Indien authenticatie gebruikt wordt, moet de achtergronddienst voor iSNS-"
+"detectie de publieke sleutel van de iSNS-server kennen. Geef de naam op van "
+"een bestand waarin de publieke sleutel opgeslagen werd. Deze zal dan "
+"gekopieerd worden naar /etc/isns/server_key.pub."
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:2001
+msgid ""
+"Alternatively, you may copy the server's public key to that location "
+"yourself."
+msgstr ""
+"Als alternatief kunt u de publieke sleutel van de server zelf naar deze "
+"locatie kopiëren."
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:2001
+msgid ""
+"If left blank and /etc/isns/server_key.pub does not exist, authentication "
+"will remain disabled."
+msgstr ""
+"Indien u dit leeg laat en /etc/isns/server_key.pub niet bestaat, zal "
+"authenticatie uitgeschakeld blijven."
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:3001
+msgid "iSNS discovery daemon private key file:"
+msgstr ""
+"Bestand met de private sleutel van de achtergronddienst voor iSNS-detectie:"
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:3001
+msgid ""
+"When authentication is enabled, the iSNS discovery daemon needs to have a "
+"private key, where the corresponding public key is enrolled with the iSNS "
+"server. Please provide a file name that contains the private key. It will "
+"then be copied to /etc/isns/auth_key."
+msgstr ""
+"Indien authenticatie gebruikt wordt, moet de achtergronddienst voor iSNS-"
+"detectie een private sleutel hebben, waarvan de overeenkomstige publieke "
+"sleutel bij de iSNS-server opgegeven werd. Geef de naam op van een bestand "
+"dat de private sleutel bevat. Deze zal dan gekopieerd worden naar /etc/isns/"
+"auth_key."
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:3001
+msgid ""
+"Alternatively, you may copy the discovery daemon's private key to that "
+"location yourself."
+msgstr ""
+"Als alternatief kunt u de private sleutel van de detectie-achtergronddienst "
+"zelf naar deze locatie kopiëren."
+
+#. Type: string
+#. Description
+#: ../open-isns-discoveryd.templates:3001
+msgid ""
+"If left blank and /etc/isns/auth_key does not exist, authentication will "
+"remain disabled."
+msgstr ""
+"Indien u dit leeg laat en /etc/isns/auth_key niet bestaat, zal authenticatie "
+"uitgeschakeld blijven."
+
+#. Type: note
+#. Description
+#: ../open-isns-discoveryd.templates:4001
+msgid "iSNS discovery daemon will not be started at installation"
+msgstr ""
+"De achtergronddienst voor iSNS-detectie zal na installatie niet opgestart "
+"worden"
+
+#. Type: note
+#. Description
+#: ../open-isns-discoveryd.templates:4001
+msgid ""
+"You have not provided an iSNS server, and the configuration file /etc/isns/"
+"isnsdd.conf does not contain a setting either. The discovery daemon will "
+"therefore not be started at installation. Please configure the discovery "
+"daemon manually."
+msgstr ""
+"U heeft geen iSNS-server opgegeven en het configuratiebestand /etc/isns/"
+"isnsdd.conf bevat evenmin een instelling. Daarom zal de detectie-"
+"achtergronddienst zal na installatie niet opgestart worden. Gelieve de "
+"detectie-achtergronddienst handmatig in te stellen."
+
+#. Type: note
+#. Description
+#: ../open-isns-discoveryd.templates:4001
+msgid "It will nevertheless be configured to start at boot."
+msgstr ""
+"Deze zal niettemin ingesteld worden om bij het aanzetten van de computer op "
+"te starten."
+
+#. Type: boolean
+#. Description
+#: ../open-isns-discoveryd.templates:5001 ../open-isns-server.templates:1001
+msgid "Remove /etc/isns/auth_key?"
+msgstr "/etc/isns/auth_key verwijderen?"
+
+#. Type: boolean
+#. Description
+#: ../open-isns-discoveryd.templates:5001
+msgid ""
+"The private authentication key /etc/isns/auth_key was likely copied there "
+"during the installation of the open-isns-discoveryd package. If you are "
+"using other iSNS-related utilities (such as the iSNS server or isnsadm) that "
+"require this authentication key, you should not remove it."
+msgstr ""
+"Vermoedelijk werd de private authenticatiesleutel /etc/isns/auth_key "
+"daarnaartoe gekopieerd tijdens het installeren van het pakket open-isns-"
+"discoveryd. Indien u nog andere hulpprogramma's gebruikt die in verband "
+"staan met iSNS (zoals de iSNS-server of isnsadm) en die deze "
+"authenticatiesleutel nodig hebben, zou u deze niet moeten verwijderen."
+
+#. Type: boolean
+#. Description
+#. Type: boolean
+#. Description
+#: ../open-isns-discoveryd.templates:5001
+#: ../open-isns-discoveryd.templates:6001 ../open-isns-server.templates:1001
+msgid "Otherwise, it is safe to remove it."
+msgstr "In het andere geval kunt u deze probleemloos verwijderen."
+
+#. Type: boolean
+#. Description
+#: ../open-isns-discoveryd.templates:6001
+msgid "Remove /etc/isns/server_key.pub?"
+msgstr "/etc/isns/server_key.pub verwijderen?"
+
+#. Type: boolean
+#. Description
+#: ../open-isns-discoveryd.templates:6001
+msgid ""
+"The iSNS server's public key /etc/isns/server_key.pub was likely copied "
+"there during the installation of the open-isns-discoveryd package. If you "
+"are using other iSNS-related utilities (such as isnsadm) that require this "
+"public key, you should not remove it."
+msgstr ""
+"/etc/isns/server_key.pub, de publieke sleutel van de iSNS-server, werd "
+"vermoedelijk daarnaartoe gekopieerd tijdens het installeren van het pakket "
+"open-isns-discoveryd. Indien u nog andere hulpprogramma's gebruikt die in "
+"verband staan met iSNS (zoals isnsadm) en die deze publieke sleutel nodig "
+"hebben, zou u deze niet moeten verwijderen."
+
+#. Type: boolean
+#. Description
+#: ../open-isns-server.templates:1001
+msgid ""
+"The private authentication key /etc/isns/auth_key was likely generated "
+"during the  installation of the open-isns-server package. If you are using "
+"other iSNS-related utilities (such as the disocvery daemon or isnsadm) that "
+"require this authentication key, you should not remove it."
+msgstr ""
+"De private authenticatiesleutel /etc/isns/auth_key werd vermoedelijk "
+"aangemaakt tijdens  het installeren van het pakket open-isns-server. Indien "
+"u nog andere hulpprogramma's gebruikt die in verband staan met iSNS (zoals "
+"de detectie-achtergronddienst of isnsadm) en die deze authenticatiesleutel "
+"nodig hebben, zou u deze niet moeten verwijderen."

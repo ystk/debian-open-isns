@@ -1,0 +1,5 @@
+debian/extra/isnsadm.conf.5 /usr/share/man/man5
+etc/isns/isnsadm.conf
+usr/sbin/isnsadm
+usr/share/man/man5/isns_config.5
+usr/share/man/man8/isnsadm.8

@@ -1,0 +1,17 @@
+#!/bin/sh
+
+set -e
+
+. debian/tests/functions.inc
+
+# Remove auth key, we want to do a simple test with an
+# unauthenticated discoveryd.
+rm -f /etc/isns/auth_key /etc/isns/auth_key.pub
+service isnsd restart
+
+# Install the discovery daemon, tell it to use localhost
+# as the iSNS server.
+printf '%s\t%s\t%s\t%s\n' open-isns-discoveryd open-isns-discoveryd/isns-server string 127.0.0.1 | debconf-set-selections
+DEBIAN_FRONTEND=noninteractive apt-get -y install open-isns-discoveryd </dev/null
+
+service_status isnsdd

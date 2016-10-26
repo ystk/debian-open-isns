@@ -1,0 +1,36 @@
+#!/bin/sh
+# postinst script for open-isns-server
+
+# as per debconf-devel(7), let debconf load the templates here
+# to make them available for postrm later
+. /usr/share/debconf/confmodule
+
+set -e
+
+case "$1" in
+    configure)
+        if [ -z "$2" ] ; then
+            # Initial configuration, let's generate a key pair
+            if ! [ -f /etc/isns/auth_key ] ; then
+                isnsd --init
+            fi
+        fi
+    ;;
+
+    abort-upgrade|abort-remove|abort-deconfigure)
+    ;;
+
+    *)
+        echo "postinst called with unknown argument \`$1'" >&2
+        exit 1
+    ;;
+esac
+
+# Prevent leak of FD 3 (from debconf), otherwise sysvinit-based
+# systems will hang at postinst (isnsd doesn't close fds when it
+# daemonizes.)
+{
+#DEBHELPER#
+} 3>&-
+
+exit 0

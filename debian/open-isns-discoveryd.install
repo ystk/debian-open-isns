@@ -1,0 +1,5 @@
+debian/extra/isnsdd.service /lib/systemd/system/
+debian/extra/isnsdd.conf.5 /usr/share/man/man5
+etc/isns/isnsdd.conf
+usr/sbin/isnsdd
+usr/share/man/man8/isnsdd.8

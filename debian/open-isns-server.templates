@@ -1,0 +1,11 @@
+Template: open-isns-server/purge-auth-key
+Type: boolean
+Default: true
+_Description: Remove /etc/isns/auth_key?
+ The private authentication key /etc/isns/auth_key was likely generated
+ during the  installation of the open-isns-server package. If you are
+ using other iSNS-related utilities (such as the disocvery daemon or
+ isnsadm) that require this authentication key, you should not remove
+ it.
+ .
+ Otherwise, it is safe to remove it.

@@ -1,0 +1,14 @@
+[Unit]
+Description=iSNS server
+Documentation=man:isnsd(8)
+Documentation=man:isnsd.conf(5)
+After=remote-fs.target network-online.target network.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+ExecStart=/usr/sbin/isnsd
+PIDFile=/run/isnsd.pid
+
+[Install]
+WantedBy=multi-user.target
