@@ -2,7 +2,7 @@
  * Handle DD registration/deregistration
  *
  * Discovery domains are weird, even in the context of
- * iSNS. For once thing, all other objects have unique
+ * iSNS. For one thing, all other objects have unique
  * attributes; DDs attributes can appear several times.
  * They should really have made each DD member an object
  * in its own right.
@@ -381,7 +381,7 @@ isns_process_dd_deregistration(isns_server_t *srv, isns_simple_t *call, isns_sim
 		if (status != ISNS_SUCCESS)
 			goto out;
 
-		/* Send notifications. This must be done before after
+		/* Send notifications. This must be done before
 		 * updating the DD.
 		 */
 		isns_dd_notify(dd, dd->dd_members, temp_dd->dd_members,
@@ -915,6 +915,9 @@ isns_dd_parse_attrs(isns_dd_t *dd, isns_db_t *db,
 					*tail = new;
 					tail = &new->ddm_next;
 				}
+
+				/* mark this object as a member of this DD */
+				isns_object_mark_membership(obj, dd->dd_id);
 			}
 			isns_object_release(obj);
 		}
@@ -1039,10 +1042,6 @@ isns_dd_add_members(isns_dd_t *dd, isns_db_t *db, isns_dd_t *new_dd)
 		if (obj->ie_index == 0)
 			isns_db_insert_limbo(db, obj);
 		mp->ddm_index = obj->ie_index;
-
-		/* Record the fact that the object is a member of
-		 * this DD */
-		isns_object_mark_membership(obj, dd->dd_id);
 
 		switch (mp->ddm_type) {
 		case ISNS_DD_MEMBER_ISCSI_NODE:
@@ -1203,6 +1202,10 @@ isns_dd_load_all(isns_db_t *db)
 
 		dd = isns_dd_clone(temp_dd);
 
+		/*
+		 * XXX duplicate call? isns_object_get() is already called
+		 * at the end of isns_dd_clone()
+		 */
 		dd->dd_object = isns_object_get(obj);
 
 		isns_dd_insert(dd);
