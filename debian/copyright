@@ -21,8 +21,16 @@ Files: debian/po/nl.po
 Copyright: 2016 Frans Spiesschaert <Frans.Spiesschaert@yucom.be>
 License: LGPL-2.1+
 
+Files: debian/po/de.po
+Copyright: 2016 Chris Leick <c.leick@vollbio.de>
+License: LGPL-2.1+
+
 Files: debian/po/fr.po
 Copyright: 2016 French l10n team <debian-l10n-french@lists.debian.org>
+License: LGPL-2.1+
+
+Files: debian/po/pt_BR.po
+Copyright: 2016 Adriano Rafael Gomes <adrianorg@debian.org>
 License: LGPL-2.1+
 
 License: LGPL-2.1+

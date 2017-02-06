@@ -1,3 +1,27 @@
+open-isns (0.97-1~bpo8+1) jessie-backports; urgency=medium
+
+  * Rebuild for jessie-backports.
+  * debian/control: debhelper in backports is now new enough, drop delta to
+    Stretch.
+
+ -- Christian Seiler <christian@iwakd.de>  Sun, 05 Feb 2017 10:35:28 +0100
+
+open-isns (0.97-1) unstable; urgency=medium
+
+  [ Christian Seiler ]
+  * New upstream version 0.97
+  * Drop debian/patches as all patches have been applied upstream.
+
+  [ Adriano Rafael Gomes ]
+  * Add Brazilian Portuguese translation of debconf messages
+    (Closes: #839272)
+
+  [ Chris Leick ]
+  * Add German translation of debconf messages
+    (Closes: #843765)
+
+ -- Christian Seiler <christian@iwakd.de>  Wed, 25 Jan 2017 10:37:36 +0100
+
 open-isns (0.96-5~bpo8+1) jessie-backports; urgency=medium
 
   * Rebuild for jessie-backports.
